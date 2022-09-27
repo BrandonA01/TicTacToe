@@ -18,3 +18,6 @@ class Space:
     def onClick(self, value):
         self.button.configure(text=value, bg='white', state=tk.DISABLED)
         self.value = value
+
+        #check winner
+        #next turn

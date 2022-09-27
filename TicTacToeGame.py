@@ -1,6 +1,7 @@
 from tkinter import *
 import tkinter as tk
 
+from Player import Player
 from TicTacToeBoard import TicTacToeBoard
 
 root = Tk()
@@ -15,13 +16,15 @@ class TicTacToeGame():
         {1, 5, 9}, {3, 5, 7},
     ]
 
+    currPlayer = Player.X.value
+
     def __init__(self, main):
         frame = Frame(main)
         frame.pack()
 
         self.label = Label(frame, text="Tic Tac Toe", font=('Ariel', 25))
         self.label.pack()
-        self.board = TicTacToeBoard(main)
+        self.board = TicTacToeBoard(main, self.currPlayer)
         self.resetButton = Button(frame, text="reset", font=('Ariel', 12), command=lambda: self.board.resetSpaces())
         self.resetButton.pack()
 
