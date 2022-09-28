@@ -33,14 +33,15 @@ class TicTacToeGame:
         rows = [[(move.row, move.col) for move in row] for row in self._current_moves]
         columns = [list(col) for col in zip(*rows)]
         first_diagonal = [row[i] for i, row in enumerate(rows)]
-        second_diagonal = [col[j] for j, col in enumerate(reversed(columns))]               # returns all rows, columns, and diagonals (all winning combos)
+        second_diagonal = [col[j] for j, col in enumerate(
+            reversed(columns))]  # returns all rows, columns, and diagonals (all winning combos)
         return rows + columns + [first_diagonal, second_diagonal]
 
     def toggle_player(self):
-        self.current_player = next(self._players)   # Switches player X to Player O
+        self.current_player = next(self._players)  # Switches player X to Player O
 
     def is_valid_move(self, move):
-        row, col = move.row, move.col       # Return True if move is valid, and False otherwise.
+        row, col = move.row, move.col  # Return True if move is valid, and False otherwise.
         move_was_not_played = self._current_moves[row][col].label == ""
         no_winner = not self._has_winner
         return no_winner and move_was_not_played
@@ -48,19 +49,20 @@ class TicTacToeGame:
     def process_move(self, move):
         row, col = move.row, move.col
         self._current_moves[row][col] = move
-        for combo in self._winning_combos:                  # check winning combinations
-            results = set(self._current_moves[n][m].label for n, m in combo)    # check board status with winning possibilities
+        for combo in self._winning_combos:  # check winning combinations
+            results = set(
+                self._current_moves[n][m].label for n, m in combo)  # check board status with winning possibilities
             is_win = (len(results) == 1) and ("" not in results)
-            if is_win:                                      # check if is_win is True
+            if is_win:  # check if is_win is True
                 self._has_winner = True
                 self.winner_combo = combo
                 break
 
     def has_winner(self):
-        return self._has_winner             # returns a bool if game has a winner
+        return self._has_winner  # returns a bool if game has a winner
 
     def is_tied(self):
-        no_winner = not self._has_winner    # Return True if the game is tied, and False otherwise.
+        no_winner = not self._has_winner  # Return True if the game is tied, and False otherwise.
         played_moves = (
             move.label for row in self._current_moves for move in row
         )
@@ -69,9 +71,9 @@ class TicTacToeGame:
     def reset_game(self):
         for row, row_content in enumerate(self._current_moves):
             for col, _ in enumerate(row_content):
-                row_content[col] = Move(row, col)       # Resets all spaces
+                row_content[col] = Move(row, col)  # Resets all spaces
         self._has_winner = False
-        self.winner_combo = []                          # Resets all variables accumulated in the game
+        self.winner_combo = []  # Resets all variables accumulated in the game
 
 
 class TicTacToeBoard(tk.Tk):
@@ -109,8 +111,8 @@ class TicTacToeBoard(tk.Tk):
         for row in range(self._game.board_size):
             self.rowconfigure(row, weight=1, minsize=50)
             self.columnconfigure(row, weight=1, minsize=75)
-            for col in range(self._game.board_size):                # creating spaces for the complete board
-                button = tk.Button(                                    # Each space is a button, seen here
+            for col in range(self._game.board_size):  # creating spaces for the complete board
+                button = tk.Button(  # Each space is a button, seen here
                     master=grid_frame,
                     text="",
                     font=font.Font(size=36, weight="bold"),
@@ -120,7 +122,7 @@ class TicTacToeBoard(tk.Tk):
                     highlightbackground="lightblue",
                 )
                 self._cells[button] = (row, col)
-                button.bind("<ButtonPress-1>", self.play)            # binding left click on a button to the function play()
+                button.bind("<ButtonPress-1>", self.play)  # binding left click on a button to the function play()
                 button.grid(row=row, column=col, padx=5, pady=5, sticky="nsew")
 
     def play(self, event):
@@ -128,19 +130,22 @@ class TicTacToeBoard(tk.Tk):
         row, col = self._cells[clicked_btn]
         move = Move(row, col, self._game.current_player.label)
         if self._game.is_valid_move(move):  # check it hasn't already been clicked
-            self._update_button(clicked_btn)
-            self._game.process_move(move)
-            if self._game.is_tied():  # check for winner
-                self._update_display(msg="Tied game!", color="red")
-            elif self._game.has_winner():
-                self._highlight_cells()
-                msg = f'Player "{self._game.current_player.label}" won!'
-                color = self._game.current_player.color
-                self._update_display(msg, color)
-            else:  # if game hasn't ended, switch players
-                self._game.toggle_player()
-                msg = f"{self._game.current_player.label}'s turn"
-                self._update_display(msg)
+            try:
+                self._update_button(clicked_btn)
+                self._game.process_move(move)
+                if self._game.is_tied():  # check for winner
+                    self._update_display(msg="Tied game!", color="red")
+                elif self._game.has_winner():
+                    self._highlight_cells()
+                    msg = f'Player "{self._game.current_player.label}" won!'
+                    color = self._game.current_player.color
+                    self._update_display(msg, color)
+                else:  # if game hasn't ended, switch players
+                    self._game.toggle_player()
+                    msg = f"{self._game.current_player.label}'s turn"
+                    self._update_display(msg)
+            except:
+                print("Cannot process new move")
 
     def _update_button(self, clicked_btn):  # update squares/buttons to show players move
         clicked_btn.config(text=self._game.current_player.label)

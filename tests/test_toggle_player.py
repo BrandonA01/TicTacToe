@@ -1,6 +1,7 @@
 import unittest
 from Game import TicTacToeGame
 
+
 class TestGame(unittest.TestCase):
 
     def test_toggle_player(self):
