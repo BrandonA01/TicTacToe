@@ -1,6 +1,6 @@
-from enum import Enum
+from typing import NamedTuple
 
 
-class Player(Enum):
-    X = 'X'
-    O = 'O'
+class Player(NamedTuple):
+    label: str
+    color: str
