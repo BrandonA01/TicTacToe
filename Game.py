@@ -44,7 +44,7 @@ class TicTacToeGame:
         row, col = move.row, move.col  # Return True if move is valid, and False otherwise.
         move_was_not_played = self._current_moves[row][col].label == ""
         no_winner = not self._has_winner
-        return no_winner and move_was_not_played
+        return no_winner and move_was_not_played        # both have to be true
 
     def process_move(self, move):
         row, col = move.row, move.col
@@ -80,6 +80,7 @@ class TicTacToeBoard(tk.Tk):
     def __init__(self, game):
         super().__init__()
         self.title("Tic-Tac-Toe Game")
+        self.resizable(False, False)
         self._cells = {}
         self._game = game
         self._create_menu()
@@ -117,8 +118,8 @@ class TicTacToeBoard(tk.Tk):
                     text="",
                     font=font.Font(size=36, weight="bold"),
                     fg="black",
-                    width=4,
-                    height=2,
+                    width=3,
+                    height=1,
                     highlightbackground="lightblue",
                 )
                 self._cells[button] = (row, col)
@@ -148,11 +149,9 @@ class TicTacToeBoard(tk.Tk):
                 print("Cannot process new move")
 
     def _update_button(self, clicked_btn):  # update squares/buttons to show players move
-        clicked_btn.config(text=self._game.current_player.label)
-        clicked_btn.config(fg=self._game.current_player.color)
+        clicked_btn.config(text=self._game.current_player.label, fg=self._game.current_player.color)
 
-    def _update_display(self, msg,
-                        color="black"):  # updates the text above the game to display player's turn, and/or who's won
+    def _update_display(self, msg, color="black"):  # updates the text above the game to display player's turn, and/or who's won
         self.display["text"] = msg
         self.display["fg"] = color
 
