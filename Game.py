@@ -9,7 +9,7 @@ BOARD_SIZE = 3  # define board size here
 
 DEFAULT_PLAYERS = (  # define all players here
     Player(label="X", color="blue"),
-    Player(label="O", color="green"),
+    Player(label="O", color="red"),
 )
 
 
@@ -33,7 +33,7 @@ class TicTacToeGame:
         rows = [[(move.row, move.col) for move in row] for row in self._current_moves]
         columns = [list(col) for col in zip(*rows)]
         first_diagonal = [row[i] for i, row in enumerate(rows)]
-        second_diagonal = [col[j] for j, col in enumerate(reversed(columns))]
+        second_diagonal = [col[j] for j, col in enumerate(reversed(columns))]               # returns all rows, columns, and diagonals (all winning combos)
         return rows + columns + [first_diagonal, second_diagonal]
 
     def toggle_player(self):
@@ -109,8 +109,8 @@ class TicTacToeBoard(tk.Tk):
         for row in range(self._game.board_size):
             self.rowconfigure(row, weight=1, minsize=50)
             self.columnconfigure(row, weight=1, minsize=75)
-            for col in range(self._game.board_size):
-                button = tk.Button(
+            for col in range(self._game.board_size):                # creating spaces for the complete board
+                button = tk.Button(                                    # Each space is a button, seen here
                     master=grid_frame,
                     text="",
                     font=font.Font(size=36, weight="bold"),
@@ -120,7 +120,7 @@ class TicTacToeBoard(tk.Tk):
                     highlightbackground="lightblue",
                 )
                 self._cells[button] = (row, col)
-                button.bind("<ButtonPress-1>", self.play)
+                button.bind("<ButtonPress-1>", self.play)            # binding left click on a button to the function play()
                 button.grid(row=row, column=col, padx=5, pady=5, sticky="nsew")
 
     def play(self, event):
@@ -156,7 +156,7 @@ class TicTacToeBoard(tk.Tk):
             if coordinates in self._game.winner_combo:
                 button.config(highlightbackground="red")
 
-    def reset_board(self):  # Rest board when user clicks "play again"
+    def reset_board(self):  # Reset board when user clicks "play again"
         self._game.reset_game()
         self._update_display(msg="Tic Tac Toe")
         for button in self._cells.keys():
